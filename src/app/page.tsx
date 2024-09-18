@@ -1,7 +1,14 @@
-export default function Home() {
+"use client";
+
+import Flowers from "@/components/Flowers/Flowers";
+import Bubbles from "@/components/Bubbles/Bubbles";
+
+export default function Page() {
   return (
-    <div>
-      <h1>Hello World</h1>
+    <div className="">
+      <div className="night"></div>
+      <Flowers />
+      <Bubbles />
     </div>
   );
 }
