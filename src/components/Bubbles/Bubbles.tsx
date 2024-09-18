@@ -1,168 +1,97 @@
-import "./Bubbles.styles.css";
+"use client";
+
+import React, { useEffect, useState } from "react";
+
+interface Flower {
+    id: string;
+    x: number;
+    y: number;
+}
 
 export default function Bubbles() {
+    const [flowers, setFlowers] = useState<Flower[]>([]);
+    const [windowSize, setWindowSize] = useState<{ width: number; height: number }>({
+        width: 0,
+        height: 0,
+    });
+
+    useEffect(() => {
+        // Actualizar el tamaño de la ventana
+        const handleResize = () => {
+            setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+        };
+
+        handleResize(); // Establecer tamaño inicial
+        window.addEventListener("resize", handleResize);
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    useEffect(() => {
+        if (windowSize.width === 0 || windowSize.height === 0) return;
+
+        const interval = setInterval(() => {
+            // Generar una nueva flor
+            const newFlower: Flower = {
+                id: Math.random().toString(36).substr(2, 9),
+                x: Math.random() * (windowSize.width - 50), // Restar el tamaño de la flor
+                y: Math.random() * (windowSize.height - 50),
+            };
+
+            setFlowers((prevFlowers) => [...prevFlowers, newFlower]);
+
+            // Eliminar la flor después de cierto tiempo
+            setTimeout(() => {
+                setFlowers((prevFlowers) => prevFlowers.filter((f) => f.id !== newFlower.id));
+            }, 5000); // La flor dura 5 segundos
+        }, 1000); // Generar una flor cada segundo
+
+        return () => clearInterval(interval);
+    }, [windowSize]);
+
     return (
-        <div className="bubbles">
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
-            <div className="bubble">
-                <svg className="heart" viewBox="0 0 32 32">
-                    <title>heart22</title>
-                    <path
-                        d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"
-                    ></path>
-                </svg>
-            </div>
+        <div className="fixed inset-0 pointer-events-none">
+            {flowers.map((flower) => (
+                <div
+                    key={flower.id}
+                    className="absolute animate-flower"
+                    style={{ left: flower.x, top: flower.y }}
+                >
+                    {/* SVG de una margarita con efectos de iluminación */}
+                    <svg width="50" height="50" viewBox="0 0 50 50">
+                        {/* Definiciones para efectos de iluminación */}
+                        <defs>
+                            <radialGradient id="gradient" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stopColor="#fff59d" />
+                                <stop offset="100%" stopColor="#fbc02d" />
+                            </radialGradient>
+                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        {/* Pétalos de la margarita */}
+                        <g filter="url(#glow)">
+                            {[...Array(8)].map((_, i) => (
+                                <ellipse
+                                    key={i}
+                                    cx="25"
+                                    cy="15"
+                                    rx="5"
+                                    ry="15"
+                                    fill="url(#gradient)"
+                                    transform={`rotate(${i * 45} 25 25)`}
+                                />
+                            ))}
+                            {/* Centro de la flor */}
+                            <circle cx="25" cy="25" r="8" fill="#ffeb3b" />
+                        </g>
+                    </svg>
+                </div>
+            ))}
         </div>
     );
 }
