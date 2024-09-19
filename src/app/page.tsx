@@ -2,14 +2,11 @@
 
 import Flowers from "@/components/Flowers/Flowers";
 import Bubbles from "@/components/Bubbles/Bubbles";
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams, usePathname } from "next/navigation";
-import { FaCopy, FaWhatsapp, FaGithub } from "react-icons/fa";
-import Link from "next/link";
-
-const encodeBase64 = (text: string) => {
-  return btoa(unescape(encodeURIComponent(text)));
-};
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import YouTube, { YouTubePlayer } from "react-youtube";
+import EditBox from "@/components/EditBox/EditBox";
+import { FaPlay, FaPause } from "react-icons/fa";
 
 const decodeBase64 = (encoded: string) => {
   try {
@@ -20,43 +17,65 @@ const decodeBase64 = (encoded: string) => {
   }
 };
 
-function NameComponent() {
-  const [name, setName] = useState("For you ❤️ My friend...");
+function NameComponent({
+  name,
+  setName,
+}: {
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+}) {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const [shouldPlay, setShouldPlay] = useState(false);
+  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(50);
+  const [isPlayerReady, setIsPlayerReady] = useState(false);
+  const [musicId, setMusicId] = useState<string | null>(null);
 
   useEffect(() => {
     const encodedName = searchParams.get("name");
+    const music = searchParams.get("music");
+
+    setShouldPlay(false);
+    setIsPlaying(false);
+    setIsPlayerReady(false);
+    setPlayer(null);
+
     if (encodedName) {
       const decodedName = decodeBase64(encodedName);
       setName(decodedName);
+      setShouldPlay(!!music);
+      setMusicId(music);
     }
-  }, [searchParams]);
+  }, [searchParams, setName]);
 
-  const handleGenerateLink = () => {
-    const encodedName = encodeBase64(name);
-    return `${window.location.origin}${pathname}?name=${encodeURIComponent(
-      encodedName
-    )}`;
+  const handlePlayerReady = (event: { target: YouTubePlayer }) => {
+    setPlayer(event.target);
+
+    setTimeout(() => {
+      setIsPlayerReady(true);
+      event.target.setVolume(volume);
+    }, 1000);
   };
 
-  const handleCopyToClipboard = () => {
-    const link = handleGenerateLink();
-    navigator.clipboard.writeText(link).then(() => {
-      alert("Enlace copiado al portapapeles!");
-    });
+  const handlePlayPauseClick = () => {
+    if (!player || !isPlayerReady) return;
+
+    if (isPlaying) {
+      player.pauseVideo();
+      setIsPlaying(false);
+    } else {
+      player.playVideo();
+      setIsPlaying(true);
+    }
   };
 
-  const handleSendWhatsApp = () => {
-    const link = handleGenerateLink();
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(link)}`;
-    window.open(whatsappUrl, "_blank");
-  };
-
-  const handleUpdateUrl = () => {
-    const encodedName = encodeBase64(name);
-    const newUrl = `${pathname}?name=${encodeURIComponent(encodedName)}`;
-    window.history.pushState(null, "", newUrl);
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = Number(e.target.value);
+    setVolume(newVolume);
+    if (player && isPlayerReady) {
+      player.setVolume(newVolume);
+    }
   };
 
   return (
@@ -65,74 +84,63 @@ function NameComponent() {
         <h1 className="h-full p-8">{name}</h1>
       </div>
 
-      {/* Mostrar el cuadro de edición solo si no hay un query parameter */}
       {!searchParams.get("name") && (
-        <div className="fixed bottom-20 right-4 z-50">
-          <div className="bg-gray-900 bg-opacity-80 text-white rounded-lg p-4 shadow-lg flex flex-col items-center space-y-2">
-            {/* Input para el nombre */}
+        <EditBox name={name} setName={setName} setMusicId={setMusicId} />
+      )}
+
+      {shouldPlay && musicId && searchParams.get("name") && (
+        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 flex flex-col items-center space-y-4">
+          <button
+            onClick={handlePlayPauseClick}
+            disabled={!isPlayerReady}
+            className={`p-4 rounded-full shadow-lg transition duration-300 ease-in-out text-white ${isPlayerReady ? "bg-neon-green hover:bg-neon-green-hover" : "bg-gray-400"
+              }`}
+          >
+            {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
+          </button>
+
+          <div className="flex items-center">
             <input
-              type="text"
-              placeholder="Escribe un nombre"
-              className="p-2 w-48 rounded-lg bg-transparent border-2 border-gray-400 focus:border-neon outline-none text-center placeholder-gray-300"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="range"
+              min="0"
+              max="100"
+              value={volume}
+              onChange={handleVolumeChange}
+              className="slider-neon"
+              disabled={!isPlayerReady}
             />
-            {/* Botón para copiar al portapapeles */}
-            <button
-              className="px-4 py-2 rounded-lg bg-neon w-full hover:bg-opacity-80 transition duration-300 flex justify-center items-center"
-              onClick={handleCopyToClipboard}
-            >
-              <FaCopy className="mr-2" />
-              Copiar
-            </button>
-            {/* Botón para mandar por WhatsApp */}
-            <button
-              className="px-4 py-2 rounded-lg bg-neon w-full hover:bg-opacity-80 transition duration-300 flex justify-center items-center"
-              onClick={handleSendWhatsApp}
-            >
-              <FaWhatsapp className="mr-2" />
-              WhatsApp
-            </button>
-            {/* Botón para actualizar la URL sin recargar */}
-            <button
-              className="px-4 py-2 rounded-lg bg-neon w-full hover:bg-opacity-80 transition duration-300 flex justify-center items-center"
-              onClick={handleUpdateUrl}
-            >
-              Actualizar URL
-            </button>
-            <div className="flex flex-row">
-              <Link href="https://github.com/Fabrizzio20k" className="flex flex-row space-x-1">
-                <h2 className="text-xs text-gray-400">Made with ❤️ by Fabrizzio20k </h2>
-                <FaGithub className="mr-2" />
-              </Link>
-            </div>
+            <span className="ml-2 text-white">{volume}%</span>
           </div>
         </div>
       )}
 
-      <style jsx>{`
-        .bg-neon {
-          background-color: #015952;
-          border: 1px solid #00ffab;
-        }
-        .focus\:border-neon:focus {
-          border-color: #00ffab;
-        }
-      `}</style>
+      {shouldPlay && musicId && searchParams.get("name") && (
+        <YouTube
+          videoId={musicId}
+          opts={{
+            height: "0",
+            width: "0",
+            playerVars: {
+              autoplay: 0,
+              controls: 0,
+            },
+          }}
+          onReady={handlePlayerReady}
+        />
+      )}
     </div>
   );
 }
 
 export default function Page() {
+  const [name, setName] = useState("For you ❤️ My friend...");
+
   return (
     <div>
       <div className="night"></div>
       <Flowers />
       <Bubbles />
-      {/* Wrap the NameComponent with Suspense */}
-      <Suspense fallback={<div>Loading...</div>}>
-        <NameComponent />
-      </Suspense>
+      <NameComponent name={name} setName={setName} />
     </div>
   );
 }
