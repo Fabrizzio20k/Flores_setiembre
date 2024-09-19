@@ -21,7 +21,7 @@ const decodeBase64 = (encoded: string) => {
 };
 
 function NameComponent() {
-  const [name, setName] = useState("(...)");
+  const [name, setName] = useState("For you ❤️ My friend...");
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
@@ -61,13 +61,13 @@ function NameComponent() {
 
   return (
     <div>
-      <div className="absolute top-0 left-0 w-full h-full text-white z-50 font-josephsophia text-5xl">
-        <h1 className="h-full p-8">For you ❤️ {name}</h1>
+      <div className="absolute top-0 left-0 w-full h-full text-white z-50 font-josephsophia text-3xl sm:text-4xl md:text-5xl">
+        <h1 className="h-full p-8">{name}</h1>
       </div>
 
       {/* Mostrar el cuadro de edición solo si no hay un query parameter */}
       {!searchParams.get("name") && (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed bottom-12 right-4 z-50">
           <div className="bg-gray-900 bg-opacity-80 text-white rounded-lg p-4 shadow-lg flex flex-col items-center space-y-2">
             {/* Input para el nombre */}
             <input
