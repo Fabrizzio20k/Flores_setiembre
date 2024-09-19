@@ -133,7 +133,7 @@ function NameComponent({
 }
 
 export default function Page() {
-  const [name, setName] = useState("For you ❤️ My dear...");
+  const [name, setName] = useState("Escribe tu mensaje para esa persona especial aquí ❤️");
 
   return (
     <div>
