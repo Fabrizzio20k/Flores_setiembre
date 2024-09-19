@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .test {
+        border: 1px solid red;
+    }
+}
+
+@font-face {
+    font-family: 'JosephSophia';
+    src: url('/fonts/josephsophia.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 *,
 *::after,
@@ -12,7 +24,7 @@
 }
 
 :root {
-    --dark-color: #010113;
+    --dark-color: #203149;
 }
 
 body {

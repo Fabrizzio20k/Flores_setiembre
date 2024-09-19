@@ -50,7 +50,7 @@ export default function Bubbles() {
     }, [windowSize]);
 
     return (
-        <div className="fixed inset-0 pointer-events-none">
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
             {flowers.map((flower) => (
                 <div
                     key={flower.id}

@@ -18,6 +18,9 @@ const config: Config = {
       animation: {
         flower: "flower-appear 5s ease-in-out",
       },
+      fontFamily: {
+        josephsophia: ['JosephSophia', 'sans-serif'],
+      },
     },
   },
   plugins: [],
