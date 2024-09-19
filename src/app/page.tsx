@@ -2,7 +2,7 @@
 
 import Flowers from "@/components/Flowers/Flowers";
 import Bubbles from "@/components/Bubbles/Bubbles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import EditBox from "@/components/EditBox/EditBox";
@@ -140,7 +140,9 @@ export default function Page() {
       <div className="night"></div>
       <Flowers />
       <Bubbles />
-      <NameComponent name={name} setName={setName} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <NameComponent name={name} setName={setName} />
+      </Suspense>
     </div>
   );
 }
