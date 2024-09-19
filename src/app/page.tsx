@@ -2,7 +2,7 @@
 
 import Flowers from "@/components/Flowers/Flowers";
 import Bubbles from "@/components/Bubbles/Bubbles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import { FaCopy, FaWhatsapp, FaGithub } from "react-icons/fa";
 import Link from "next/link";
@@ -20,7 +20,7 @@ const decodeBase64 = (encoded: string) => {
   }
 };
 
-export default function Page() {
+function NameComponent() {
   const [name, setName] = useState("(...)");
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -61,11 +61,7 @@ export default function Page() {
 
   return (
     <div>
-      <div className="night"></div>
-      <Flowers />
-      <Bubbles />
       <div className="absolute top-0 left-0 w-full h-full text-white z-50 font-josephsophia text-5xl">
-        {/* Utiliza la variable `name` aquí */}
         <h1 className="h-full p-8">For you ❤️ {name}</h1>
       </div>
 
@@ -86,7 +82,7 @@ export default function Page() {
               className="px-4 py-2 rounded-lg bg-neon w-full hover:bg-opacity-80 transition duration-300 flex justify-center items-center"
               onClick={handleCopyToClipboard}
             >
-              <FaCopy className="mr-2" /> {/* Ícono de copia */}
+              <FaCopy className="mr-2" />
               Copiar
             </button>
             {/* Botón para mandar por WhatsApp */}
@@ -94,7 +90,7 @@ export default function Page() {
               className="px-4 py-2 rounded-lg bg-neon w-full hover:bg-opacity-80 transition duration-300 flex justify-center items-center"
               onClick={handleSendWhatsApp}
             >
-              <FaWhatsapp className="mr-2" /> {/* Ícono de WhatsApp */}
+              <FaWhatsapp className="mr-2" />
               WhatsApp
             </button>
             {/* Botón para actualizar la URL sin recargar */}
@@ -123,6 +119,20 @@ export default function Page() {
           border-color: #00ffab;
         }
       `}</style>
+    </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <div>
+      <div className="night"></div>
+      <Flowers />
+      <Bubbles />
+      {/* Wrap the NameComponent with Suspense */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <NameComponent />
+      </Suspense>
     </div>
   );
 }
