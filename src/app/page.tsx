@@ -133,7 +133,7 @@ function NameComponent({
 }
 
 export default function Page() {
-  const [name, setName] = useState("For you ❤️ My friend...");
+  const [name, setName] = useState("For you ❤️ My dear...");
 
   return (
     <div>

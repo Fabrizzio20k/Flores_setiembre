@@ -101,7 +101,7 @@ export default function EditBox({
                     className="px-4 py-2 rounded-lg bg-neon w-full hover:bg-opacity-80 transition duration-300 flex justify-center items-center"
                     onClick={handleUpdateUrl}
                 >
-                    Actualizar URL
+                    Vista previa
                 </button>
                 <div className="flex flex-row">
                     <Link href="https://github.com/Fabrizzio20k" className="flex flex-row space-x-1">
