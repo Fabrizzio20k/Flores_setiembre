@@ -77,7 +77,7 @@ export default function EditBox({
                     placeholder="Pega el enlace del video"
                     className="p-2 w-48 rounded-lg bg-transparent border-2 border-gray-400 focus:border-neon outline-none text-center placeholder-gray-300"
                     value={musicUrl}
-                    onChange={(e) => setMusicUrl(e.target.value)} // Actualizar el enlace de YouTube ingresado
+                    onChange={(e) => setMusicUrl(e.target.value)}
                 />
 
                 {/* Botón para copiar al portapapeles */}
@@ -86,7 +86,7 @@ export default function EditBox({
                     onClick={handleCopyToClipboard}
                 >
                     <FaCopy className="mr-2" />
-                    Copiar
+                    Copiar enlace
                 </button>
                 {/* Botón para mandar por WhatsApp */}
                 <button
@@ -94,7 +94,7 @@ export default function EditBox({
                     onClick={handleSendWhatsApp}
                 >
                     <FaWhatsapp className="mr-2" />
-                    WhatsApp
+                    Enviar por WhatsApp
                 </button>
                 {/* Botón para actualizar la URL sin recargar */}
                 <button
