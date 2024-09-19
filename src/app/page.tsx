@@ -67,7 +67,7 @@ function NameComponent() {
 
       {/* Mostrar el cuadro de edición solo si no hay un query parameter */}
       {!searchParams.get("name") && (
-        <div className="fixed bottom-1/4 right-4 z-50">
+        <div className="fixed bottom-20 right-4 z-50">
           <div className="bg-gray-900 bg-opacity-80 text-white rounded-lg p-4 shadow-lg flex flex-col items-center space-y-2">
             {/* Input para el nombre */}
             <input
