@@ -63,7 +63,7 @@ export default function EditBox({
                 </label>
                 <input
                     type="text"
-                    placeholder="Escribe un nombre"
+                    placeholder="For you ❤️"
                     className="p-2 w-48 rounded-lg bg-transparent border-2 border-gray-400 focus:border-neon outline-none text-center placeholder-gray-300"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
